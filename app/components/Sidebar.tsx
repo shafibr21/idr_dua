@@ -328,10 +328,20 @@ export default function Sidebar() {
                   onClick={() => toggleCategory(category.cat_id)}
                 >
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gray-600 rounded-lg flex items-center justify-center">
-                      <span className="text-lg">
-                        {getCategoryIcon(category.cat_icon || "custom_image")}
-                      </span>
+                    <div className="w-10 h-10 bg-gray-600 rounded-lg flex items-center justify-center overflow-hidden">
+                      <img
+                        src={`/${category.cat_icon}.png`}
+                        alt={category.cat_name_en}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback to icon if image doesn't exist
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = "none";
+                          target.parentElement!.innerHTML = `<span class="text-lg text-white">${getCategoryIcon(
+                            category.cat_icon || "custom_image"
+                          )}</span>`;
+                        }}
+                      />
                     </div>
                     <div className="flex-1">
                       <h3 className="text-sm font-medium text-white">

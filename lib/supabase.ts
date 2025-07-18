@@ -130,6 +130,11 @@ export function getCategoryIcon(iconName: string): string {
     family: "👨‍👩‍👧‍👦",
     knowledge: "📚",
     wealth: "💰",
+    bari: "🏠",
+    sokal_sondha: "🌅",
+    toilet: "🚽" ,
+    ghum: "😴",
+    poshak: "👗",
 
   }
   

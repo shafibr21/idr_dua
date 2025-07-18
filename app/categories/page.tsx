@@ -1,40 +1,43 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Search, Home, ChevronRight } from "lucide-react"
-import Link from "next/link"
-import { supabase, getCategoryIcon, type Category } from "@/lib/supabase"
-import PageLayout from "../components/PageLayout"
+import { useState, useEffect } from "react";
+import { Search, Home, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { supabase, getCategoryIcon, type Category } from "@/lib/supabase";
+import PageLayout from "../components/PageLayout";
 
 export default function CategoriesPage() {
-  const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState("")
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetchCategories()
-  }, [])
+    fetchCategories();
+  }, []);
 
   const fetchCategories = async () => {
     try {
-      setLoading(true)
-      const { data, error } = await supabase.from("category").select("*").order("cat_id")
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("category")
+        .select("*")
+        .order("cat_id");
 
-      if (error) throw error
-      setCategories(data || [])
+      if (error) throw error;
+      setCategories(data || []);
     } catch (error) {
-      console.error("Error fetching categories:", error)
+      console.error("Error fetching categories:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   // Filter categories based on search term
   const filteredCategories = categories.filter(
     (category) =>
       category.cat_name_en?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      category.cat_name_bn?.includes(searchTerm),
-  )
+      category.cat_name_bn?.includes(searchTerm)
+  );
 
   if (loading) {
     return (
@@ -53,7 +56,7 @@ export default function CategoriesPage() {
           </div>
         </div>
       </PageLayout>
-    )
+    );
   }
 
   return (
@@ -74,8 +77,12 @@ export default function CategoriesPage() {
         {/* Header Section */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-semibold text-white mb-2">Categories of Dua</h1>
-            <p className="text-teal-400">Total Categories: {categories.length}</p>
+            <h1 className="text-3xl font-semibold text-white mb-2">
+              Categories of Dua
+            </h1>
+            <p className="text-teal-400">
+              Total Categories: {categories.length}
+            </p>
           </div>
 
           {/* Search */}
@@ -100,12 +107,28 @@ export default function CategoriesPage() {
               className="bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-gray-600 rounded-lg p-4 transition-all duration-200 group"
             >
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-gray-700 group-hover:bg-gray-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-2xl">{getCategoryIcon(category.cat_icon || "")}</span>
+                <div className="w-12 h-12 bg-gray-700 group-hover:bg-gray-600 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  <img
+                    src={`/${category.cat_icon}.png`}
+                    alt={category.cat_name_en}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback to icon if image doesn't exist
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = "none";
+                      target.parentElement!.innerHTML = `<span class="text-2xl text-white">${getCategoryIcon(
+                        category.cat_icon || ""
+                      )}</span>`;
+                    }}
+                  />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-white font-medium text-sm mb-1 truncate">{category.cat_name_en}</h3>
-                  <p className="text-gray-400 text-xs">{category.no_of_subcat || 0} Subcategories</p>
+                  <h3 className="text-white font-medium text-sm mb-1 truncate">
+                    {category.cat_name_en}
+                  </h3>
+                  <p className="text-gray-400 text-xs">
+                    {category.no_of_subcat || 0} Subcategories
+                  </p>
                 </div>
               </div>
             </Link>
@@ -114,10 +137,12 @@ export default function CategoriesPage() {
 
         {filteredCategories.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-400">No categories found matching your search.</p>
+            <p className="text-gray-400">
+              No categories found matching your search.
+            </p>
           </div>
         )}
       </div>
     </PageLayout>
-  )
+  );
 }
