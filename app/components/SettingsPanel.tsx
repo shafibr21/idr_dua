@@ -1,0 +1,138 @@
+"use client";
+
+import { useState } from "react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Globe,
+  Type,
+  Eye,
+  Palette,
+} from "lucide-react";
+
+export default function SettingsPanel() {
+  const [expandedSections, setExpandedSections] = useState<string[]>([
+    "language",
+  ]);
+
+  const toggleSection = (section: string) => {
+    setExpandedSections((prev) =>
+      prev.includes(section)
+        ? prev.filter((s) => s !== section)
+        : [...prev, section]
+    );
+  };
+
+  const settingSections = [
+    {
+      id: "language",
+      title: "Language Settings",
+      icon: Globe,
+      content: (
+        <div className="space-y-3">
+          <div>
+            <p className="text-sm text-gray-400 mb-2">Selected Language</p>
+            <div className="flex items-center justify-between p-3 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600">
+              <span className="text-white">English</span>
+              <ChevronRight className="w-4 h-4 text-gray-400" />
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "font",
+      title: "Font Setting",
+      icon: Type,
+      content: (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-400">Font Size</span>
+            <div className="flex space-x-2">
+              <button className="w-8 h-8 bg-gray-700 rounded hover:bg-gray-600 text-xs">
+                A
+              </button>
+              <button className="w-8 h-8 bg-gray-700 rounded hover:bg-gray-600 text-sm">
+                A
+              </button>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "view",
+      title: "View Setting",
+      icon: Eye,
+      content: (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-400">Display Mode</span>
+            <select className="bg-gray-700 border border-gray-600 rounded px-3 py-1 text-sm">
+              <option>Normal</option>
+              <option>Compact</option>
+            </select>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "appearance",
+      title: "Appearance Settings",
+      icon: Palette,
+      content: (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-400">Theme</span>
+            <div className="flex space-x-2">
+              <div className="w-6 h-6 bg-gray-800 rounded border-2 border-teal-500 cursor-pointer"></div>
+              <div className="w-6 h-6 bg-blue-600 rounded cursor-pointer"></div>
+              <div className="w-6 h-6 bg-green-600 rounded cursor-pointer"></div>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <div className="w-80 bg-gray-800 border-l border-gray-700 h-[calc(100vh-4rem)]">
+      <div className="p-4">
+        <div className="space-y-2">
+          {settingSections.map((section) => {
+            const Icon = section.icon;
+            const isExpanded = expandedSections.includes(section.id);
+
+            return (
+              <div
+                key={section.id}
+                className="bg-gray-700 rounded-lg overflow-hidden"
+              >
+                <div
+                  className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-600 transition-colors"
+                  onClick={() => toggleSection(section.id)}
+                >
+                  <div className="flex items-center space-x-3">
+                    <Icon className="w-5 h-5 text-teal-400" />
+                    <span className="text-sm font-medium text-white">
+                      {section.title}
+                    </span>
+                  </div>
+                  {isExpanded ? (
+                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                  ) : (
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                  )}
+                </div>
+
+                {isExpanded && (
+                  <div className="px-4 pb-4">{section.content}</div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}

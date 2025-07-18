@@ -1,15 +1,24 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+export default function HomePage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Redirect to category 1 by default
+    router.push("/categories/1");
+  }, [router]);
+
   return (
-    <main>
-      <h1>Welcome to My Website</h1>
-      <Image
-        src="/path/to/image.jpg"
-        alt="Description of image"
-        width={500}
-        height={300}
-      />
-    </main>
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-16 h-16 bg-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span className="text-2xl">🤲</span>
+        </div>
+        <p className="text-gray-400">Redirecting...</p>
+      </div>
+    </div>
   );
 }
