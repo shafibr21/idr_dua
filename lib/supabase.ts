@@ -130,7 +130,8 @@ export function getCategoryIcon(iconName: string): string {
     family: "👨‍👩‍👧‍👦",
     knowledge: "📚",
     wealth: "💰",
-  }
 
+  }
+  
   return iconMap[iconName] || "📖"
 }
