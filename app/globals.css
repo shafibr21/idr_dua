@@ -8,6 +8,45 @@
   font-family: "Amiri", serif;
 }
 
+/* Navigation highlight animations */
+@keyframes pulseScale {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(20, 184, 166, 0.3);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(20, 184, 166, 0);
+  }
+}
+
+@keyframes duaPulseScale {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.8);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 0 0 15px rgba(20, 184, 166, 0.4);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(20, 184, 166, 0);
+  }
+}
+
+.subcategory-highlight {
+  animation: pulseScale 1.5s ease-out;
+}
+
+.dua-highlight {
+  animation: duaPulseScale 2s ease-out;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;

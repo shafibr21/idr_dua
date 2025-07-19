@@ -142,7 +142,12 @@ export default function MainContent() {
       <div
         className={`flex-1 bg-gray-900 p-6 ${
           isHeaderVisible ? "h-[calc(100vh-4rem)]" : "h-screen"
-        } overflow-y-auto`}
+        } overflow-y-auto scroll-smooth`}
+        style={{
+          scrollBehavior: "smooth",
+          scrollbarWidth: "thin",
+          scrollbarColor: "#059669 #1f2937",
+        }}
       >
         <div className="flex items-center justify-center h-full">
           <div className="text-center">
@@ -167,7 +172,12 @@ export default function MainContent() {
       <div
         className={`flex-1 bg-gray-900 p-6 ${
           isHeaderVisible ? "h-[calc(100vh-4rem)]" : "h-screen"
-        } overflow-y-auto`}
+        } overflow-y-auto scroll-smooth`}
+        style={{
+          scrollBehavior: "smooth",
+          scrollbarWidth: "thin",
+          scrollbarColor: "#059669 #1f2937",
+        }}
       >
         <div className="animate-pulse space-y-6">
           <div className="space-y-2">
@@ -194,7 +204,12 @@ export default function MainContent() {
     <div
       className={`flex-1 bg-gray-900 p-6 ${
         isHeaderVisible ? "h-[calc(100vh-4rem)]" : "h-screen"
-      } overflow-y-auto`}
+      } overflow-y-auto scroll-smooth`}
+      style={{
+        scrollBehavior: "smooth",
+        scrollbarWidth: "thin",
+        scrollbarColor: "#059669 #1f2937",
+      }}
     >
       {/* Breadcrumb */}
       <nav className="flex items-center space-x-2 text-sm text-gray-400 mb-6">
@@ -219,16 +234,14 @@ export default function MainContent() {
         )}
       </nav>
 
-      {/* Category Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-teal-400 mb-2">
-          <span className="text-gray-400">Category:</span>{" "}
-          {currentCategory?.cat_name_en || "Loading..."}
-        </h1>
-        <div className="bg-gray-800 rounded-lg p-4">
-          <p className="text-gray-300">
-            <span className="text-teal-400 font-medium">Subcategories:</span>{" "}
-            {subcategoriesWithDuas.length} |{" "}
+      {/* Category Summary */}
+      {currentCategory && (
+        <div className="border border-teal-600 rounded-2xl p-6 mb-8 ">
+          <h1 className="text-2xl font-bold text-teal-600 mb-2">
+            {currentCategory.cat_name_en}
+          </h1>
+          <p className="text-teal-400 mb-4">{currentCategory.cat_name_bn}</p>
+          <p className="text-gray-400 text-sm">
             <span className="text-teal-400 font-medium">Total Duas:</span>{" "}
             {subcategoriesWithDuas.reduce(
               (total, item) => total + item.duas.length,
@@ -236,7 +249,7 @@ export default function MainContent() {
             )}
           </p>
         </div>
-      </div>
+      )}
 
       {/* Subcategories and Duas */}
       <div className="space-y-12">
@@ -247,7 +260,7 @@ export default function MainContent() {
               id={`subcategory-${item.subcategory.subcat_id}`}
             >
               {/* Subcategory Header */}
-              <div className="bg-gray-800 rounded-lg p-4 border-l-4 border-teal-500">
+              <div className="border border-teal-600 rounded-3xl p-4 ">
                 <h2 className="text-xl font-semibold text-teal-400 mb-2">
                   Section: {item.subcategory.subcat_name_en}
                 </h2>

@@ -4,6 +4,7 @@ import type React from "react";
 import Header from "./Header";
 import NavigationSidebar from "./NavigationSidebar";
 import { HeaderProvider, useHeader } from "../contexts/HeaderContext";
+import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -26,7 +27,9 @@ function PageLayoutContent({ children }: PageLayoutProps) {
 export default function PageLayout({ children }: PageLayoutProps) {
   return (
     <HeaderProvider>
-      <PageLayoutContent>{children}</PageLayoutContent>
+      <SmoothScrollProvider>
+        <PageLayoutContent>{children}</PageLayoutContent>
+      </SmoothScrollProvider>
     </HeaderProvider>
   );
 }

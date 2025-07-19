@@ -53,7 +53,7 @@ export default function DuaCard({ dua, index, isLast = false }: DuaCardProps) {
   };
 
   return (
-    <div id={`dua-${dua.id}`} className="">
+    <div id={`dua-${dua.id}`} className="rounded-2xl">
       {/* Header */}
       <div className="flex items-start justify-between p-7 pb-4">
         <div className="flex items-center space-x-4">
@@ -73,7 +73,7 @@ export default function DuaCard({ dua, index, isLast = false }: DuaCardProps) {
       </div>
 
       {/* Content */}
-      <div className="px-6 pb-6">
+      <div className="px-6 pb-6 ">
         {/* Top Description */}
         {dua.top_en && (
           <div className="my-4 px-4">
@@ -150,27 +150,27 @@ export default function DuaCard({ dua, index, isLast = false }: DuaCardProps) {
           <div className="flex items-center space-x-2">
             <button
               onClick={() => {}}
-              className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-700 rounded-2xl transition-colors"
               title="Bookmark"
             >
               <Bookmark className="w-5 h-5 text-gray-400 hover:text-white" />
             </button>
             <button
               onClick={handleCopy}
-              className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-700 rounded-2xl transition-colors"
               title="Copy"
             >
               <Copy className="w-5 h-5 text-gray-400 hover:text-white" />
             </button>
             <button
               onClick={handleShare}
-              className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-700 rounded-2xl transition-colors"
               title="Share"
             >
               <Share2 className="w-5 h-5 text-gray-400 hover:text-white" />
             </button>
             <button
-              className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-700 rounded-2xl transition-colors"
               title="More"
             >
               <MoreHorizontal className="w-5 h-5 text-gray-400 hover:text-white" />
@@ -178,7 +178,7 @@ export default function DuaCard({ dua, index, isLast = false }: DuaCardProps) {
           </div>
         </div>
       </div>
-      {!isLast && <hr className="border-gray-700" />}
+      {!isLast && <hr className="border-teal-900" />}
     </div>
   );
 }

@@ -10,6 +10,7 @@ import {
   Palette,
 } from "lucide-react";
 import { useHeader } from "../contexts/HeaderContext";
+import SmoothScrollContainer from "@/components/SmoothScrollContainer";
 
 export default function SettingsPanel() {
   const { isHeaderVisible } = useHeader();
@@ -34,7 +35,7 @@ export default function SettingsPanel() {
         <div className="space-y-3">
           <div>
             <p className="text-sm text-gray-400 mb-2">Selected Language</p>
-            <div className="flex items-center justify-between p-3 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600">
+            <div className="flex items-center justify-between p-3 bg-teal-800 rounded-lg cursor-pointer hover:bg-teal-500">
               <span className="text-white">English</span>
               <ChevronRight className="w-4 h-4 text-gray-400" />
             </div>
@@ -70,7 +71,7 @@ export default function SettingsPanel() {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm text-gray-400">Display Mode</span>
-            <select className="bg-gray-700 border border-gray-600 rounded px-3 py-1 text-sm">
+            <select className="bg-gray-900 border border-gray-600 rounded px-3 py-1 text-sm">
               <option>Normal</option>
               <option>Compact</option>
             </select>
@@ -99,46 +100,50 @@ export default function SettingsPanel() {
 
   return (
     <div
-      className={`w-80 bg-gray-800 border-l border-gray-700 ${
+      className={`w-80 bg-gray-900   ${
         isHeaderVisible ? "h-[calc(100vh-4rem)]" : "h-screen"
       }`}
     >
-      <div className="p-4">
-        <div className="space-y-2">
-          {settingSections.map((section) => {
-            const Icon = section.icon;
-            const isExpanded = expandedSections.includes(section.id);
+      <SmoothScrollContainer
+        className="h-full"
+        speed={0.9}
+        ease="power2.out"
+        normalizeScroll={true}
+      >
+        <div className="p-4">
+          <div className="space-y-2">
+            {settingSections.map((section) => {
+              const Icon = section.icon;
+              const isExpanded = expandedSections.includes(section.id);
 
-            return (
-              <div
-                key={section.id}
-                className="bg-gray-700 rounded-lg overflow-hidden"
-              >
-                <div
-                  className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-600 transition-colors"
-                  onClick={() => toggleSection(section.id)}
-                >
-                  <div className="flex items-center space-x-3">
-                    <Icon className="w-5 h-5 text-teal-400" />
-                    <span className="text-sm font-medium text-white">
-                      {section.title}
-                    </span>
+              return (
+                <div key={section.id} className="rounded-lg overflow-hidden">
+                  <div
+                    className="flex items-center justify-between p-4 cursor-pointer hover:text-teal-400 transition-colors"
+                    onClick={() => toggleSection(section.id)}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <Icon className="w-5 h-5 text-teal-700" />
+                      <span className="text-sm font-medium text-teal-400">
+                        {section.title}
+                      </span>
+                    </div>
+                    {isExpanded ? (
+                      <ChevronDown className="w-4 h-4 text-gray-400" />
+                    ) : (
+                      <ChevronRight className="w-4 h-4 text-gray-400" />
+                    )}
                   </div>
-                  {isExpanded ? (
-                    <ChevronDown className="w-4 h-4 text-gray-400" />
-                  ) : (
-                    <ChevronRight className="w-4 h-4 text-gray-400" />
+
+                  {isExpanded && (
+                    <div className="px-4 pb-4">{section.content}</div>
                   )}
                 </div>
-
-                {isExpanded && (
-                  <div className="px-4 pb-4">{section.content}</div>
-                )}
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
-      </div>
+      </SmoothScrollContainer>
     </div>
   );
 }

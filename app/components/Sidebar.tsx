@@ -5,6 +5,7 @@ import type React from "react";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Search, ChevronDown, ChevronRight } from "lucide-react";
+import { gsap } from "gsap";
 import {
   getCategoryIcon,
   supabase,
@@ -12,6 +13,7 @@ import {
   type SubCategory,
 } from "@/lib/supabase";
 import { useHeader } from "../contexts/HeaderContext";
+import Image from "next/image";
 
 // Simplified Dua type for sidebar display
 interface SidebarDua {
@@ -222,25 +224,47 @@ export default function Sidebar() {
       `subcategory-${subcategoryId}`
     );
     if (subcategoryElement) {
+      // First scroll to the element
       subcategoryElement.scrollIntoView({
         behavior: "smooth",
         block: "start",
         inline: "nearest",
       });
 
-      // Add a highlight effect
-      subcategoryElement.classList.add(
-        "ring-2",
-        "ring-teal-500",
-        "ring-opacity-50"
-      );
+      // Wait for scroll to complete, then animate
       setTimeout(() => {
-        subcategoryElement.classList.remove(
-          "ring-2",
-          "ring-teal-500",
-          "ring-opacity-50"
+        // GSAP scale and glow animation for subcategory
+        gsap.fromTo(
+          subcategoryElement,
+          {
+            scale: 1,
+            boxShadow: "0 0 0 0px rgba(20, 184, 166, 0)",
+          },
+          {
+            scale: 1.02,
+            boxShadow: "0 0 20px 3px rgba(20, 184, 166, 0.3)",
+            duration: 0.6,
+            ease: "power2.out",
+            yoyo: true,
+            repeat: 1,
+            onComplete: () => {
+              // Add a subtle ring highlight that fades out
+              gsap.to(subcategoryElement, {
+                boxShadow: "0 0 0 2px rgba(20, 184, 166, 0.3)",
+                duration: 0.3,
+                ease: "power2.out",
+                onComplete: () => {
+                  gsap.to(subcategoryElement, {
+                    boxShadow: "0 0 0 0px rgba(20, 184, 166, 0)",
+                    duration: 1.5,
+                    ease: "power2.out",
+                  });
+                },
+              });
+            },
+          }
         );
-      }, 2000);
+      }, 800); // Wait for scroll animation to mostly complete
     }
   };
 
@@ -250,21 +274,51 @@ export default function Sidebar() {
     // Scroll to the specific dua in MainContent
     const duaElement = document.getElementById(`dua-${duaId}`);
     if (duaElement) {
+      // First scroll to the element
       duaElement.scrollIntoView({
         behavior: "smooth",
         block: "center",
         inline: "nearest",
       });
 
-      // Add a highlight effect
-      duaElement.classList.add("ring-2", "ring-teal-500", "ring-opacity-75");
+      // Wait for scroll to complete, then animate
       setTimeout(() => {
-        duaElement.classList.remove(
-          "ring-2",
-          "ring-teal-500",
-          "ring-opacity-75"
+        // GSAP scale and pulse animation for individual dua
+        gsap.fromTo(
+          duaElement,
+          {
+            scale: 1,
+            boxShadow: "0 0 0 0px rgba(20, 184, 166, 0)",
+          },
+          {
+            scale: 1.015,
+            boxShadow: "0 0 25px 4px rgba(20, 184, 166, 0.4)",
+            duration: 0.8,
+            ease: "power2.out",
+            yoyo: true,
+            repeat: 1,
+            onComplete: () => {
+              // Create a pulsing glow effect
+              const tl = gsap.timeline({ repeat: 2 });
+              tl.to(duaElement, {
+                boxShadow: "0 0 0 2px rgba(20, 184, 166, 0.4)",
+                duration: 0.4,
+                ease: "power2.inOut",
+              })
+                .to(duaElement, {
+                  boxShadow: "0 0 0 1px rgba(20, 184, 166, 0.2)",
+                  duration: 0.4,
+                  ease: "power2.inOut",
+                })
+                .to(duaElement, {
+                  boxShadow: "0 0 0 0px rgba(20, 184, 166, 0)",
+                  duration: 1,
+                  ease: "power2.out",
+                });
+            },
+          }
         );
-      }, 3000);
+      }, 800); // Wait for scroll animation to mostly complete
     }
   };
 
@@ -280,7 +334,12 @@ export default function Sidebar() {
       <div
         className={`w-80 bg-gray-800 border-r border-gray-700 ${
           isHeaderVisible ? "h-[calc(100vh-4rem)]" : "h-screen"
-        } overflow-y-auto`}
+        } overflow-y-auto scroll-smooth`}
+        style={{
+          scrollBehavior: "smooth",
+          scrollbarWidth: "thin",
+          scrollbarColor: "#059669 #1f2937",
+        }}
       >
         <div className="p-4">
           <div className="animate-pulse space-y-4">
@@ -298,9 +357,14 @@ export default function Sidebar() {
 
   return (
     <div
-      className={`w-80 bg-gray-800 border-r border-gray-700 ${
+      className={`w-80 bg-gray-900 ${
         isHeaderVisible ? "h-[calc(100vh-4rem)]" : "h-screen"
-      } overflow-y-auto`}
+      } overflow-y-auto scroll-smooth`}
+      style={{
+        scrollBehavior: "smooth",
+        scrollbarWidth: "thin",
+        scrollbarColor: "#059669 #1f2937",
+      }}
     >
       <div className="p-4">
         {/* Search */}
@@ -311,7 +375,7 @@ export default function Sidebar() {
             placeholder="Search By Category"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-gray-700 border border-gray-600 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+            className="w-full bg-gray-900 border border-teal-700 rounded-full pl-10 pr-4 py-2.5 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
           />
         </div>
 
@@ -321,21 +385,21 @@ export default function Sidebar() {
             filteredCategories.map((category) => (
               <div
                 key={category.cat_id}
-                className="bg-gray-700 rounded-lg overflow-hidden"
+                className="bg-gray-900 rounded-2xl overflow-hidden"
               >
                 {/* Category Header */}
                 <div
-                  className={`flex items-center justify-between p-3 cursor-pointer hover:bg-gray-600 transition-colors ${
-                    expandedCategory === category.cat_id ? "bg-gray-600" : ""
+                  className={`flex items-center justify-between p-3 cursor-pointer hover:text-teal-500 ${
+                    expandedCategory === category.cat_id ? "bg-gray-900" : ""
                   }`}
                   onClick={() => toggleCategory(category.cat_id)}
                 >
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gray-600 rounded-lg flex items-center justify-center overflow-hidden">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
                       <img
                         src={`/${category.cat_icon}.png`}
                         alt={category.cat_name_en}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover "
                         onError={(e) => {
                           // Fallback to icon if image doesn't exist
                           const target = e.target as HTMLImageElement;
@@ -347,7 +411,7 @@ export default function Sidebar() {
                       />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-sm font-medium text-white">
+                      <h3 className="text-sm font-medium text-teal-700 hover:text-teal-500">
                         {category.cat_name_en}
                       </h3>
                       <p className="text-xs text-gray-400">
@@ -368,70 +432,115 @@ export default function Sidebar() {
                 {/* Subcategories */}
                 {expandedCategory === category.cat_id &&
                   subcategories[category.cat_id] && (
-                    <div className="bg-gray-750">
-                      {subcategories[category.cat_id].map((item) => (
-                        <div key={item.subcat_id}>
-                          {/* Subcategory Item */}
-                          <div
-                            className={`flex items-center justify-between px-6 py-3 cursor-pointer transition-colors border-l-4 hover:bg-gray-600 text-gray-300 ${
-                              expandedSubcategories.includes(item.subcat_id)
-                                ? "bg-gray-600 border-teal-500"
-                                : "border-transparent"
-                            }`}
-                            onClick={(e) =>
-                              handleSubcategoryClick(item.subcat_id, e)
-                            }
-                          >
-                            <div className="flex items-center space-x-3 flex-1">
-                              <div className="w-2 h-2 bg-teal-400 rounded-full flex-shrink-0"></div>
-                              <div className="flex-1">
-                                <p className="text-sm font-medium">
-                                  {item.subcat_name_en}
-                                </p>
-                                <p className="text-xs text-gray-400">
-                                  {item.no_of_dua || 0} Duas
-                                </p>
+                    <div className="bg-gray-750 relative">
+                      {/* Continuous vertical line for entire subcategory section */}
+                      <div
+                        className="absolute left-8 top-0 w-0.5 h-full opacity-80"
+                        style={{
+                          backgroundImage:
+                            "linear-gradient(to bottom, #134e4a 50%, transparent 50%)",
+                          backgroundSize: "2px 12px",
+                          backgroundRepeat: "repeat-y",
+                        }}
+                      ></div>
+
+                      {subcategories[category.cat_id].map(
+                        (item, subcatIndex) => (
+                          <div key={item.subcat_id}>
+                            {/* Subcategory Item */}
+                            <div
+                              className={`flex items-center justify-between px-6 py-3 cursor-pointer  hover:text-teal-500 relative  ${
+                                expandedSubcategories.includes(item.subcat_id)
+                                  ? "text-teal-700  "
+                                  : "border-transparent"
+                              }`}
+                              onClick={(e) =>
+                                handleSubcategoryClick(item.subcat_id, e)
+                              }
+                            >
+                              {/* Tree structure - horizontal connector */}
+                              <div
+                                className="absolute left-8 top-1/2 w-6 h-0.5 opacity-80"
+                                style={{
+                                  backgroundImage:
+                                    "linear-gradient(to right, #134e4a 40%, transparent 40%)",
+                                  backgroundSize: "10px 2px",
+                                  backgroundRepeat: "repeat-x",
+                                }}
+                              ></div>
+
+                              <div className="flex items-center space-x-3 flex-1 relative z-10 ml-8">
+                                <div className="flex-1">
+                                  <p className="text-sm font-medium ml-4 text-teal-700 hover:text-teal-500">
+                                    {item.subcat_name_en}
+                                  </p>
+                                  <p className="text-xs text-gray-400 ml-4">
+                                    {item.no_of_dua || 0} Duas
+                                  </p>
+                                </div>
                               </div>
                             </div>
-                          </div>
 
-                          {/* Individual Duas - Show when expanded */}
-                          {expandedSubcategories.includes(item.subcat_id) && (
-                            <div className="bg-gray-800">
-                              {loadingDuas.includes(item.subcat_id) ? (
-                                <div className="px-10 py-4 text-center">
-                                  <div className="animate-pulse space-y-2">
-                                    <div className="h-3 bg-gray-700 rounded w-3/4"></div>
-                                    <div className="h-3 bg-gray-700 rounded w-1/2"></div>
-                                  </div>
-                                </div>
-                              ) : duas[item.subcat_id] &&
-                                duas[item.subcat_id].length > 0 ? (
-                                duas[item.subcat_id].map((dua, index) => (
-                                  <div
-                                    key={`${item.subcat_id}-${dua.dua_id}-${index}`}
-                                    className="flex items-start space-x-3 px-10 py-2 cursor-pointer text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
-                                    onClick={() => handleDuaClick(dua.id)}
-                                  >
-                                    <div className="flex-shrink-0 mt-2">
-                                      <div className="w-1 h-1 rounded-full bg-gray-500"></div>
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                      <p className="text-xs leading-relaxed">
-                                        {dua.dua_name_en}
-                                      </p>
+                            {/* Individual Duas - Show when expanded */}
+                            {expandedSubcategories.includes(item.subcat_id) && (
+                              <div>
+                                {loadingDuas.includes(item.subcat_id) ? (
+                                  <div className="px-10 py-4 text-center">
+                                    <div className="animate-pulse space-y-2">
+                                      <div className="h-3 bg-gray-700 rounded w-3/4"></div>
+                                      <div className="h-3 bg-gray-700 rounded w-1/2"></div>
                                     </div>
                                   </div>
-                                ))
-                              ) : (
-                                <div className="px-10 py-4 text-center text-gray-500 text-xs">
-                                  No duas found in this subcategory
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      ))}
+                                ) : duas[item.subcat_id] &&
+                                  duas[item.subcat_id].length > 0 ? (
+                                  duas[item.subcat_id].map((dua, index) => (
+                                    <div
+                                      key={`${item.subcat_id}-${dua.dua_id}-${index}`}
+                                      className="flex items-start space-x-3 px-7 py-2 cursor-pointer text-teal-700 hover:text-teal-400   relative"
+                                      onClick={() => handleDuaClick(dua.id)}
+                                    >
+                                      <div className="flex items-center space-x-2 ml-10">
+                                        <div className="relative flex-shrink-0 w-4 h-3">
+                                          {/* Curved dotted line */}
+                                          <div
+                                            className="absolute top-0 left-0 w-4 h-3"
+                                            style={{
+                                              borderLeft: "2px dotted #0d9488",
+                                              borderBottom:
+                                                "2px dotted #0d9488",
+                                              borderBottomLeftRadius: "8px",
+                                            }}
+                                          ></div>
+                                          {/* Arrow head */}
+                                          <div
+                                            className="absolute w-0 h-0"
+                                            style={{
+                                              borderTop:
+                                                "4px solid transparent",
+                                              borderBottom:
+                                                "4px solid transparent",
+                                              borderLeft: "6px solid #0d9488",
+                                              left: "12px",
+                                              bottom: "-3px",
+                                            }}
+                                          ></div>
+                                        </div>
+                                        <p className="text-xs leading-relaxed">
+                                          {dua.dua_name_en}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <div className="px-10 py-4 text-center text-gray-500 text-xs">
+                                    No duas found in this subcategory
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )
+                      )}
                     </div>
                   )}
               </div>
