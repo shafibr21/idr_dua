@@ -30,50 +30,48 @@ export default function Sidebar() {
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [duas, setDuas] = useState<{ [key: number]: SidebarDua[] }>({}); // Store duas by subcategory ID
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Use localStorage to persist expanded state across re-renders
-  const [expandedCategory, setExpandedCategoryState] = useState<number>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem("sidebarExpandedCategory");
-        console.log("Initializing expandedCategory from localStorage:", saved);
-        return saved && saved !== "null" && saved !== "undefined"
-          ? parseInt(saved, 10)
-          : 0;
-      } catch (error) {
-        console.error(
-          "Error parsing expandedCategory from localStorage:",
-          error
-        );
-        localStorage.removeItem("sidebarExpandedCategory");
-        return 0;
-      }
-    }
-    return 0;
-  });
+  // Use safe initial state for SSR
+  const [expandedCategory, setExpandedCategoryState] = useState<number>(0);
 
-  // Also persist subcategories data in localStorage
+  // Safe initial state for subcategories
   const [subcategories, setSubcategoriesState] = useState<{
     [key: number]: SubCategory[];
-  }>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem("sidebarSubcategories");
-        return saved && saved !== "undefined" ? JSON.parse(saved) : {};
-      } catch (error) {
-        console.error("Error parsing subcategories from localStorage:", error);
-        // Clear invalid data
-        localStorage.removeItem("sidebarSubcategories");
-        return {};
+  }>({});
+
+  // Handle hydration and load from localStorage after client-side hydration
+  useEffect(() => {
+    setIsHydrated(true);
+
+    // Load expanded category from localStorage after hydration
+    try {
+      const saved = localStorage.getItem("sidebarExpandedCategory");
+      console.log("Loading expandedCategory from localStorage:", saved);
+      if (saved && saved !== "null" && saved !== "undefined") {
+        setExpandedCategoryState(parseInt(saved, 10));
       }
+    } catch (error) {
+      console.error("Error loading expandedCategory from localStorage:", error);
+      localStorage.removeItem("sidebarExpandedCategory");
     }
-    return {};
-  });
+
+    // Load subcategories from localStorage after hydration
+    try {
+      const saved = localStorage.getItem("sidebarSubcategories");
+      if (saved && saved !== "undefined") {
+        setSubcategoriesState(JSON.parse(saved));
+      }
+    } catch (error) {
+      console.error("Error loading subcategories from localStorage:", error);
+      localStorage.removeItem("sidebarSubcategories");
+    }
+  }, []);
 
   const setExpandedCategory = (categoryId: number) => {
     console.log("Setting expanded category to:", categoryId);
     setExpandedCategoryState(categoryId);
-    if (typeof window !== "undefined") {
+    if (isHydrated && typeof window !== "undefined") {
       try {
         localStorage.setItem("sidebarExpandedCategory", categoryId.toString());
       } catch (error) {
@@ -86,7 +84,7 @@ export default function Sidebar() {
     [key: number]: SubCategory[];
   }) => {
     setSubcategoriesState(newSubcategories);
-    if (typeof window !== "undefined") {
+    if (isHydrated && typeof window !== "undefined") {
       try {
         localStorage.setItem(
           "sidebarSubcategories",
