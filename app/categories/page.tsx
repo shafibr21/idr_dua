@@ -75,7 +75,7 @@ export default function CategoriesPage() {
         </nav>
 
         {/* Header Section */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-8 sticky top-0 bg-gray-900 z-10 py-4 -mx-6 px-6">
           <div>
             <h1 className="text-3xl font-semibold text-white mb-2">
               Categories of Dua

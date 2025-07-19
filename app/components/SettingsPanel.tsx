@@ -9,8 +9,10 @@ import {
   Eye,
   Palette,
 } from "lucide-react";
+import { useHeader } from "../contexts/HeaderContext";
 
 export default function SettingsPanel() {
+  const { isHeaderVisible } = useHeader();
   const [expandedSections, setExpandedSections] = useState<string[]>([
     "language",
   ]);
@@ -96,7 +98,11 @@ export default function SettingsPanel() {
   ];
 
   return (
-    <div className="w-80 bg-gray-800 border-l border-gray-700 h-[calc(100vh-4rem)]">
+    <div
+      className={`w-80 bg-gray-800 border-l border-gray-700 ${
+        isHeaderVisible ? "h-[calc(100vh-4rem)]" : "h-screen"
+      }`}
+    >
       <div className="p-4">
         <div className="space-y-2">
           {settingSections.map((section) => {

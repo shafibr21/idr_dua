@@ -4,8 +4,8 @@ import { Home, Grid3X3, Bookmark, Settings, Menu } from "lucide-react";
 
 export default function NavigationSidebar() {
   return (
-    <div className="w-20 bg-gray-800 border-r border-gray-700 h-screen flex flex-col ">
-      <div className="flex flex-col h-full">
+    <div className="w-20 bg-gray-800 border-r border-gray-700 h-screen flex flex-col">
+      <div className="flex flex-col h-full ">
         {/* Logo Section */}
         <div className="p-4">
           <div className="w-12 h-12 bg-teal-600 rounded-xl flex items-center justify-center">
@@ -17,7 +17,7 @@ export default function NavigationSidebar() {
 
         {/* Navigation Items */}
         <div className="flex-1 py-6">
-          <div className="space-y-4 px-4 flex flex-col items-center justify-center h-full">
+          <div className="space-y-4 px-4 flex flex-col justify-center h-full">
             {/* Home */}
             <div className="w-12 h-12 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-700 transition-colors cursor-pointer">
               <Home className="w-6 h-6" />

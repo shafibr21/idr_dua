@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ChevronRight, Home } from "lucide-react";
+import Link from "next/link";
 import {
   supabase,
   type Dua,
@@ -10,9 +11,11 @@ import {
 } from "@/lib/supabase";
 import DuaCard from "./DuaCard";
 import { useDuaContext } from "./DuaProvider";
+import { useHeader } from "../contexts/HeaderContext";
 
 export default function MainContent() {
   const { selectedCategoryId } = useDuaContext();
+  const { isHeaderVisible } = useHeader();
   const [subcategoriesWithDuas, setSubcategoriesWithDuas] = useState<
     { subcategory: SubCategory; duas: Dua[] }[]
   >([]);
@@ -136,7 +139,11 @@ export default function MainContent() {
   // Show welcome message when no category is selected
   if (!selectedCategoryId || selectedCategoryId === 0) {
     return (
-      <div className="flex-1 bg-gray-900 p-6 max-h-[calc(100vh-4rem)] overflow-y-auto">
+      <div
+        className={`flex-1 bg-gray-900 p-6 ${
+          isHeaderVisible ? "h-[calc(100vh-4rem)]" : "h-screen"
+        } overflow-y-auto`}
+      >
         <div className="flex items-center justify-center h-full">
           <div className="text-center">
             <div className="w-24 h-24 bg-teal-600 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -157,7 +164,11 @@ export default function MainContent() {
 
   if (loading) {
     return (
-      <div className="flex-1 bg-gray-900 p-6 max-h-[calc(100vh-4rem)] overflow-y-auto">
+      <div
+        className={`flex-1 bg-gray-900 p-6 ${
+          isHeaderVisible ? "h-[calc(100vh-4rem)]" : "h-screen"
+        } overflow-y-auto`}
+      >
         <div className="animate-pulse space-y-6">
           <div className="space-y-2">
             <div className="h-4 bg-gray-700 rounded w-1/4"></div>
@@ -180,15 +191,26 @@ export default function MainContent() {
   }
 
   return (
-    <div className="flex-1 bg-gray-900 p-6 max-h-[calc(100vh-4rem)] overflow-y-auto">
+    <div
+      className={`flex-1 bg-gray-900 p-6 ${
+        isHeaderVisible ? "h-[calc(100vh-4rem)]" : "h-screen"
+      } overflow-y-auto`}
+    >
       {/* Breadcrumb */}
       <nav className="flex items-center space-x-2 text-sm text-gray-400 mb-6">
         <div className="flex items-center space-x-1">
           <Home className="w-4 h-4 text-teal-400" />
-          <span className="text-teal-400">Home</span>
+          <Link href="/" className="text-teal-400 hover:text-teal-300">
+            Home
+          </Link>
         </div>
         <ChevronRight className="w-4 h-4" />
-        <span>Categories of Dua</span>
+        <Link
+          href="/categories"
+          className="text-teal-400 hover:text-teal-300 cursor-pointer"
+        >
+          Categories of Dua
+        </Link>
         {currentCategory && (
           <>
             <ChevronRight className="w-4 h-4" />

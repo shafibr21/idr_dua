@@ -1,8 +1,19 @@
-import { Search, Heart } from "lucide-react"
+"use client";
+
+import { Search, Heart } from "lucide-react";
+import { useHeader } from "../contexts/HeaderContext";
 
 export default function Header() {
+  const { isHeaderVisible } = useHeader();
+
   return (
-    <header className="bg-gray-800 border-b border-gray-700 px-6 py-4 ">
+    <header
+      className={`bg-gray-800 px-6 transition-all duration-300 ease-in-out sticky top-0 z-50 ${
+        isHeaderVisible
+          ? "py-4 h-16 border-b border-gray-700"
+          : "py-0 h-0 overflow-hidden border-b-0"
+      }`}
+    >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <div>
@@ -20,5 +31,5 @@ export default function Header() {
         </div>
       </div>
     </header>
-  )
+  );
 }

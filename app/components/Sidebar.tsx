@@ -11,6 +11,7 @@ import {
   type Category,
   type SubCategory,
 } from "@/lib/supabase";
+import { useHeader } from "../contexts/HeaderContext";
 
 // Simplified Dua type for sidebar display
 interface SidebarDua {
@@ -23,6 +24,7 @@ interface SidebarDua {
 export default function Sidebar() {
   console.log("Sidebar component rendering");
   const router = useRouter();
+  const { isHeaderVisible } = useHeader();
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [duas, setDuas] = useState<{ [key: number]: SidebarDua[] }>({}); // Store duas by subcategory ID
@@ -207,19 +209,12 @@ export default function Sidebar() {
     subcategoryId: number,
     event: React.MouseEvent
   ) => {
-    // Accordion behavior: if clicking on already expanded subcategory, collapse it
-    // If clicking on a different subcategory, collapse all others and expand this one
-    if (expandedSubcategories.includes(subcategoryId)) {
-      // Collapse the currently expanded subcategory
-      setExpandedSubcategories([]);
-    } else {
-      // Collapse all others and expand only this one (accordion behavior)
-      setExpandedSubcategories([subcategoryId]);
+    // Always expand this subcategory and fetch duas when clicked
+    setExpandedSubcategories([subcategoryId]);
 
-      // Fetch duas if not already loaded
-      if (!duas[subcategoryId]) {
-        await fetchDuasForSubcategory(subcategoryId);
-      }
+    // Fetch duas if not already loaded
+    if (!duas[subcategoryId]) {
+      await fetchDuasForSubcategory(subcategoryId);
     }
 
     // Scroll to the subcategory in MainContent
@@ -282,7 +277,11 @@ export default function Sidebar() {
 
   if (loading) {
     return (
-      <div className="w-80 bg-gray-800 border-r border-gray-700 max-h-[calc(100vh-4rem)] overflow-y-auto">
+      <div
+        className={`w-80 bg-gray-800 border-r border-gray-700 ${
+          isHeaderVisible ? "h-[calc(100vh-4rem)]" : "h-screen"
+        } overflow-y-auto`}
+      >
         <div className="p-4">
           <div className="animate-pulse space-y-4">
             <div className="h-10 bg-gray-700 rounded"></div>
@@ -298,7 +297,11 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="w-80 bg-gray-800 border-r border-gray-700 max-h-[calc(100vh-4rem)] overflow-y-auto">
+    <div
+      className={`w-80 bg-gray-800 border-r border-gray-700 ${
+        isHeaderVisible ? "h-[calc(100vh-4rem)]" : "h-screen"
+      } overflow-y-auto`}
+    >
       <div className="p-4">
         {/* Search */}
         <div className="relative mb-6">
@@ -370,7 +373,11 @@ export default function Sidebar() {
                         <div key={item.subcat_id}>
                           {/* Subcategory Item */}
                           <div
-                            className={`flex items-center justify-between px-6 py-3 cursor-pointer transition-colors border-l-4 hover:bg-gray-600 text-gray-300 border-transparent`}
+                            className={`flex items-center justify-between px-6 py-3 cursor-pointer transition-colors border-l-4 hover:bg-gray-600 text-gray-300 ${
+                              expandedSubcategories.includes(item.subcat_id)
+                                ? "bg-gray-600 border-teal-500"
+                                : "border-transparent"
+                            }`}
                             onClick={(e) =>
                               handleSubcategoryClick(item.subcat_id, e)
                             }
@@ -386,22 +393,9 @@ export default function Sidebar() {
                                 </p>
                               </div>
                             </div>
-
-                            {/* Chevron for expanding duas */}
-                            <div className="chevron-area p-1">
-                              {item.no_of_dua &&
-                                item.no_of_dua > 0 &&
-                                (expandedSubcategories.includes(
-                                  item.subcat_id
-                                ) ? (
-                                  <ChevronDown className="w-3 h-3 text-gray-400" />
-                                ) : (
-                                  <ChevronRight className="w-3 h-3 text-gray-400" />
-                                ))}
-                            </div>
                           </div>
 
-                          {/* Individual Duas - Only show when expanded */}
+                          {/* Individual Duas - Show when expanded */}
                           {expandedSubcategories.includes(item.subcat_id) && (
                             <div className="bg-gray-800">
                               {loadingDuas.includes(item.subcat_id) ? (
