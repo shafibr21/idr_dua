@@ -49,6 +49,18 @@ export default function Header() {
               <p className="text-xs md:text-sm text-gray-400">Hisnul Muslim</p>
             </div>
           </div>
+
+          {/* Search input & support button non functional */}
+          {!isMobile && (
+            <div className="flex items-center space-x-6">
+              <Search className="w-6 h-6 text-teal-400 cursor-pointer hover:text-teal-900 transition-colors" />
+              <button className="bg-teal-600 hover:bg-teal-700 px-6 py-2.5 rounded-full flex items-center space-x-2 transition-colors">
+                <Heart className="w-4 h-4" />
+                <span className="text-sm font-medium">Support Us</span>
+              </button>
+            </div>
+          )}
+
           {/* Settings button */}
           {isMobile && (
             <button
