@@ -65,6 +65,13 @@
   background: #9ca3af;
 }
 
+/* Mobile scrollbar (thinner) */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
+}
+
 /* Responsive adjustments */
 @media (max-width: 1024px) {
   .sidebar {
@@ -82,5 +89,55 @@
 
   .sidebar.open {
     left: 0;
+  }
+
+  /* Mobile touch improvements */
+  .mobile-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Mobile text sizes */
+  .mobile-text-sm {
+    font-size: 0.875rem;
+  }
+
+  .mobile-text-xs {
+    font-size: 0.75rem;
+  }
+}
+
+/* Responsive font sizes for Arabic text */
+@media (max-width: 640px) {
+  .font-arabic {
+    font-size: 1.5rem !important;
+    line-height: 1.8 !important;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .font-arabic {
+    font-size: 2rem !important;
+    line-height: 1.75 !important;
+  }
+}
+
+/* Safe area adjustments for mobile devices */
+@supports (padding: max(0px)) {
+  .safe-area-inset {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+}
+
+/* Improved touch targets */
+@media (pointer: coarse) {
+  button,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"],
+  .clickable {
+    min-height: 44px;
+    min-width: 44px;
   }
 }

@@ -1,11 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import dynamic from "next/dynamic";
 import PageLayout from "../../components/PageLayout";
 import Sidebar from "../../components/Sidebar";
 import SettingsPanel from "../../components/SettingsPanel";
 import MainContent from "../../components/MainContent";
 import { DuaProvider, useDuaContext } from "../../components/DuaProvider";
+
+// Dynamically import mobile components to avoid SSR issues
+const MobileCategoriesFAB = dynamic(
+  () => import("../../components/MobileCategoriesFAB"),
+  {
+    ssr: false,
+  }
+);
 
 interface CategoryPageProps {
   params: Promise<{ id: string }>;
@@ -29,8 +38,17 @@ function CategoryPageWithProvider({ categoryId }: { categoryId: number }) {
 
   return (
     <>
-      <MainContent />
-      <SettingsPanel />
+      <div className="flex flex-col lg:flex-row flex-1">
+        <MainContent />
+        <div className="hidden lg:block">
+          <SettingsPanel />
+        </div>
+      </div>
+
+      {/* Mobile FABs - now inside DuaProvider */}
+      <Suspense fallback={null}>
+        <MobileCategoriesFAB />
+      </Suspense>
     </>
   );
 }
@@ -59,10 +77,14 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
   return (
     <PageLayout>
-      <Sidebar />
-      <DuaProvider>
-        <CategoryPageWithProvider categoryId={categoryId} />
-      </DuaProvider>
+      <div className="flex flex-col md:flex-row w-full">
+        <div className="hidden md:block">
+          <Sidebar />
+        </div>
+        <DuaProvider>
+          <CategoryPageWithProvider categoryId={categoryId} />
+        </DuaProvider>
+      </div>
     </PageLayout>
   );
 }

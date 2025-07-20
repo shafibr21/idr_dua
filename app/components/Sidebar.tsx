@@ -246,18 +246,11 @@ export default function Sidebar() {
             yoyo: true,
             repeat: 1,
             onComplete: () => {
-              // Add a subtle ring highlight that fades out
+              // Fade out the glow effect
               gsap.to(subcategoryElement, {
-                boxShadow: "0 0 0 2px rgba(20, 184, 166, 0.3)",
-                duration: 0.3,
+                boxShadow: "0 0 0 0px rgba(20, 184, 166, 0)",
+                duration: 1.5,
                 ease: "power2.out",
-                onComplete: () => {
-                  gsap.to(subcategoryElement, {
-                    boxShadow: "0 0 0 0px rgba(20, 184, 166, 0)",
-                    duration: 1.5,
-                    ease: "power2.out",
-                  });
-                },
               });
             },
           }
